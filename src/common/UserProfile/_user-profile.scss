@@ -1,0 +1,17 @@
+.user-profile{
+    width: 60px;
+    border-radius: 50%;
+    min-width: 60px;
+    height:60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    >p,>i{
+        margin:0;
+        color:white;
+        font-size: 20px;
+        font-weight: 500;
+        
+    }
+}
