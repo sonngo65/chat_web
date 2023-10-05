@@ -3,13 +3,11 @@ import UserProfile from "../../common/UserProfile";
 import { useContext } from "react";
 import cx from "classnames";
 import { LatestMessageContext } from "../../context/LatestMessage";
-import users from "./constants/users";
 import "./_user-list.scss"
-function User({ icon, name, userId, isOnline, lastActive, color }) {
-    const { messages } = useContext(LatestMessageContext)
+function User({ userId,icon, name, lastMessage, isOnline, lastActive, color,onClick }) {
     return (
-        <div className="user-list__users__user">
-            <UserProfile icon={icon} name={name} color={color} />
+        <div className="user-list__users__user" onClick={()=>{onClick(userId)}}>
+            <UserProfile icon={icon} name={name} color={color} lastMessage={lastMessage} />
             <div className="user-list__users__user__right-content">
                 <div className="user-list__users__user__title">
                     <p>{name}</p>
@@ -17,7 +15,7 @@ function User({ icon, name, userId, isOnline, lastActive, color }) {
                         {isOnline ? 'Online' : lastActive}
                     </p>
                 </div>
-                <p>{messages[userId]}</p>
+                <p>{lastMessage}</p>
             </div>
         </div>
     )
@@ -25,7 +23,21 @@ function User({ icon, name, userId, isOnline, lastActive, color }) {
 
 export default function UserList() {
 
-    console.log(users)
+    const { data,setData } = useContext(LatestMessageContext)
+    const {users} = data;
+    const onClick = (userId)=>
+    {
+        const newCurrentFriend = users.filter((user)=>{
+            return user.userId === userId;
+        })[0];
+        console.log(newCurrentFriend);
+        setData({
+            ...data,
+            currentFriend:  newCurrentFriend
+                
+        })
+
+    }
     return (
         <div className="user-list">
             <div className="user-list__header">
@@ -37,7 +49,7 @@ export default function UserList() {
             </div>
             <div className="user-list__users">
                 {users.map((user) => {
-                    return <User key={user.name} {...user} />
+                    return <User key={user.name} {...user} onClick={onClick}/>
                 })}
             </div>
         </div>

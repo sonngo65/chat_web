@@ -1,5 +1,5 @@
 export default [
-    { name: 'Botty', userId: 'bot', icon: 'fas fa-comment-dots', isOnline: true, color: '#4DB8EF' },
+    { name: 'Botty', userId: 'bot', icon: 'fas fa-comment-dots', isOnline: true, color: '#4DB8EF' , lastMessage: 'Xin chào tôi là Sơn ChatBot!' },
     { name: 'Brandon Andrews', userId: 'brandon', isOnline: false, lastActive: '3 hours go', color: '#DD95BA', lastMessage: 'Hello there!' },
     { name: 'Clayton Day', userId: 'clayton', isOnline: false, lastActive: 'Yesterday', color: '#62D5D1', lastMessage: 'Yes of course. Thanks' },
     { name: 'Bernice Clark', userId: 'bernice', isOnline: true, color: '#82D39F', lastMessage: 'This is a question regarding the' },
