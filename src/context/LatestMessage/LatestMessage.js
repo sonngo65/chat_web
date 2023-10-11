@@ -1,18 +1,54 @@
-import { useState, createContext, useCallback, useContext } from "react";
-import initialMessage from "./constants/initialMessage";
-import userList from "./constants/users";
-
+import { useState, createContext, useCallback, useContext, useEffect } from "react";
+import webstomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import http from "./../../http-common";
 export const LatestMessageContext = createContext({});
 
 export default function LatestMessage({ children }) {
-    const currentFriend = {
-        name: 'Botty',
-        userId: 'bot',
-        icon: 'fas fa-comment-dots',
-        isOnline: true, color: '#4DB8EF',
-        lastMessage: 'Xin chào tôi là Sơn ChatBot!'
-    };
-    const [data, setData] = useState({ users: userList, messages: initialMessage, currentFriend: currentFriend});
+    const destinationUrl = '/ws/simple-cat-box'
+    const relativeWsConnectUrl = '/ws/connect';
+    const WsConnectUrl = `http://localhost:9090${relativeWsConnectUrl}`;
+    const [stompClient, setStompClient] = useState(null);
+
+    const [data, setData] = useState({ users: [], messages: [], currentFriend: null, userId: null, stompClient });
+
+
+
+    useEffect(() => {
+
+        const stompClient = webstomp.over(SockJS(WsConnectUrl));
+        stompClient.connect({}, () => {
+
+            setData((preData) => { return { ...preData, stompClient: stompClient } });
+            stompClient.subscribe(destinationUrl, (newState) => {
+                console.log(newState);
+                const message = JSON.parse(newState.body);
+                if (message.output !== undefined) {
+                    setData(preState => {
+                        return {
+                            ...preState, messages:
+                                ((message.userSendId === preState.userId && message.userReceivedId === preState.currentFriend.userId)
+                                    || (message.userSendId === preState.currentFriend.userId && message.userReceivedId === preState.userId))
+                                    ? [
+                                        ...preState.messages,
+                                        {
+                                            text: message.text,
+                                            user: message.userSendId === preState.userId,
+                                            time: message.time
+                                        }
+                                    ] : [...preState.messages]
+
+                        }
+                    })
+                }
+            });
+
+        })
+
+    }, [])
+
+
+    console.log(data);
     return (
         <LatestMessageContext.Provider value={{ data, setData }}>
             {children}

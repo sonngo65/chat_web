@@ -2,39 +2,43 @@ import Header from "./Header"
 import "../style/_messages.scss"
 import Footer from "./Footer"
 import { LatestMessageContext } from "../../../context/LatestMessage"
-import { useContext,use } from "react";
+import { useContext } from "react";
 import { Message } from "./Message";
 import UseSound from "use-sound";
 import sound from "../../../common/SoundApp/sound";
+
+
 export default function Messages() {
-    const { data, setData } = useContext(LatestMessageContext);
-    const { messages, currentFriend } = data;
-    const { userId } = currentFriend;
-    const friendMessages = messages[userId];
+    const destinationUrl = '/ws/simple-cat-box'
+    const { data } = useContext(LatestMessageContext);
+    const { messages, currentFriend, userId, stompClient } = data;
+    const friendId = currentFriend.userId;
     const [sendSound] = UseSound(sound.SEND_MESSAGE_SOUND);
 
-    const sendMessage = (event, text, userId, isUser = true) => {
+
+
+    const sendMessage = (text, userId, friendId) => {
+        let message = { text, userSendId: userId, userReceivedId: friendId };
+        message = JSON.stringify(message);
+        stompClient.send(destinationUrl, message);
+    }
+
+
+    const sendMessageEvent = (event, text, userId, friendId) => {
         if (event.key === "Enter") {
             sendSound();
+            sendMessage(text, userId, friendId);
 
-            setData({
-                ...data,
-                messages: {
-                    ...messages,
-                    [userId]: [...friendMessages, { text, isUser }]
-                }
-            }
-            )
         }
     }
-    console.log(messages);
+    console.log(data);
     return (
         <div className="messages">
             <Header {...currentFriend} />
             <div className="messages__list" id="message-list">
-                {friendMessages.map((message) => { return <Message {...message} /> })}
+                {messages && messages.map((message) => { return <Message {...message} /> })}
             </div>
-            <Footer sendMessage={sendMessage} userId={userId} />
+            <Footer sendMessageEvent={sendMessageEvent} userId={userId} friendId={friendId} />
         </div>
     )
 }
