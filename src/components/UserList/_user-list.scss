@@ -41,6 +41,38 @@
                 margin: 0;
             }
         }
+
+        &__dropdown {
+            position: relative;
+
+            &__content {
+                padding: 5px 10px;
+                min-width: 120px;
+                position: absolute;
+                display: none;
+                left: 0;
+                top: 100%;
+                background-color: #596872;
+
+                a {
+                    color: white;
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    width: 100px;
+                    height: 20px;
+                    top: -20px;
+                }
+            }
+
+            &:hover &__content {
+
+                display: block;
+
+            }
+        }
     }
 
     &__users {
@@ -60,7 +92,7 @@
             }
 
             &:first-of-type {
-                  background: #EFF8FB;
+                background: #EFF8FB;
                 cursor: default;
             }
 
@@ -82,11 +114,13 @@
 
             &__title {
                 display: flex;
-                >p:last-of-type{
+
+                >p:last-of-type {
                     margin-left: auto;
                 }
 
             }
+
             &__online {
                 background: #83C67E;
                 color: white !important;
@@ -99,11 +133,11 @@
                 text-transform: lowercase;
                 font-weight: 400;
                 line-height: 15px;
-              }
-        
-              &:not(:last-of-type) {
+            }
+
+            &:not(:last-of-type) {
                 border-bottom: 1px solid #F0F4F7;
-              }
+            }
 
         }
 

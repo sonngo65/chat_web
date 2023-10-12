@@ -5,10 +5,9 @@ const getInitials= (string)=>{
 
 
 export default function UserProfile({color,name,icon}){
-    console.log(getInitials(name))
     return(
-        <div className="user-profile" style={{background:color}}>
-            {icon!=="" ? <i className={icon}/> : <p>{getInitials(name)}</p>}
+        <div className="user-profile" >
+            {icon!=="" ? <img src={icon}/> : <p>{getInitials(name)}</p>}
 
         </div>
         

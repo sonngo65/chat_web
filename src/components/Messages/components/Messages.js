@@ -25,6 +25,7 @@ export default function Messages() {
 
 
     const sendMessageEvent = (event, text, userId, friendId) => {
+        console.log(userId,friendId)
         if (event.key === "Enter") {
             sendSound();
             sendMessage(text, userId, friendId);

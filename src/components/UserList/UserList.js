@@ -27,34 +27,33 @@ export default function UserList() {
     const { data, setData } = useContext(LatestMessageContext)
     const { users } = data;
     useEffect(() => {
+
         http.get(`/messages/${data.userId}/${data.currentFriend.userId}`)
             .then((response) => {
 
                 return response.data
             }).then((messages) => {
-                console.log(messages)
 
+                console.log(messages)
                 setData(preData => {
                     return {
                         ...preData,
                         messages: messages.map(
                             message => {
-                               return {
-                                text: message.text,
-                                user: message.userSendId === preData.userId,
-                                time: message.time
-                               }
+                                return {
+                                    text: message.text,
+                                    user: message.userSendId === preData.userId,
+                                    time: message.time
+                                }
                             })
                     }
                 })
             })
     }, [data.currentFriend])
-    console.log(data);
     const onClick = (userId) => {
         const newCurrentFriend = users.filter((user) => {
             return user.userId === userId;
         })[0];
-        console.log(newCurrentFriend);
         setData({
             ...data,
             currentFriend: newCurrentFriend
@@ -62,14 +61,38 @@ export default function UserList() {
         })
 
     }
+    const goBackHomeEvent = ()=>{
+        setData({
+            ...data,
+            currentFriend: null
+
+        })
+
+    }
+    const logoutEvent = ()=>{
+        sessionStorage.setItem("data",JSON.stringify(null));
+        sessionStorage.setItem("login",JSON.stringify(false));
+            
+    }
     return (
         <div className="user-list">
             <div className="user-list__header">
                 <div className="user-list__header__left">
                     <p>All Messages</p>
-                    <i className="fas fa-chevron-down" />
+                    <div className="user-list__header__dropdown">
+                        <i className="fas fa-chevron-down" />
+                        <div className="user-list__header__dropdown__content">
+                            <a href="/new-connect"><p>Thêm kết nối</p></a>
+                            <a href="/"><p  onClick={goBackHomeEvent}>Home</p></a>
+                            <a href="/"><p  onClick={logoutEvent}>Đăng xuât</p></a>
+
+                        </div>
+                    </div>
                 </div>
+
                 <i className="fas fa-cog" />
+
+
             </div>
             <div className="user-list__users">
                 {users.map((user) => {

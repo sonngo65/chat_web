@@ -4,12 +4,13 @@ import { LatestMessageContext } from "../../context/LatestMessage"
 import { useState } from "react";
 import "./_login.scss"
 import http from "../../http-common";
-export  function Login({ setLogin }) {
+import { useNavigate } from "react-router-dom";
+export  function Login({ setLogin,login}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const { data,setData } = useContext(LatestMessageContext);
-
-    const login = (e) => {
+    
+    const loginOnclick= (e) => {
         e.preventDefault();
         http.post("/login",
             {
@@ -42,7 +43,7 @@ export  function Login({ setLogin }) {
                 <p>Password:</p>
                 <input placeholder="Password" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <button onClick={login}>Đăng nhập</button>
+            <button onClick={loginOnclick}>Đăng nhập</button>
         </div>
     )
 }

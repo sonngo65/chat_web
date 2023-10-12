@@ -7,17 +7,22 @@ import { useContext } from "react";
 import http from "../../http-common";
 export default function Home() {
     const {data,setData} = useContext(LatestMessageContext); 
-    useEffect(()=>{
-        console.log("home sassssssss");
+   
+     useEffect(()=>{
+        console.log(data)
         http.get(`users/friendship/${data.userId}`)
         .then((response) => {
             return response.data;
         }).then(users => {
-            setData({
+            console.log(users);
+            setData((preData)=> { 
+                console.log(users);
+                return {
                 ...data,
-                currentFriend: users[0],
-                users: users
-            })
+                currentFriend: preData.currentFriend === null ? users[0] : preData.currentFriend ,
+                users: preData.currentFriend === null ? users : []
+            }})
+            
         })
 
     },[])

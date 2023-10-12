@@ -1,4 +1,4 @@
-import { useState, createContext, useCallback, useContext, useEffect } from "react";
+import { useState, createContext, useCallback, useContext, useEffect, useRef } from "react";
 import webstomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import http from "./../../http-common";
@@ -8,14 +8,21 @@ export default function LatestMessage({ children }) {
     const destinationUrl = '/ws/simple-cat-box'
     const relativeWsConnectUrl = '/ws/connect';
     const WsConnectUrl = `http://localhost:9090${relativeWsConnectUrl}`;
-    const [stompClient, setStompClient] = useState(null);
-
-    const [data, setData] = useState({ users: [], messages: [], currentFriend: null, userId: null, stompClient });
-
-
-
+    const [data, setData] = useState({ users: [], messages: [], currentFriend: null, userId: null, stompClient : null });
+    const session = useRef(null); 
+    console.log(session.current);
+    console.log("sssssadddddddddddddddddddddddddddddddddddddddd")
     useEffect(() => {
-
+        console.log(session.current)
+        if (session.current!== null) {
+            setData((preData) => { return{ ...preData, userId: session.current}});
+        }
+    } , [])
+    session.current =  sessionStorage.getItem('data')
+    sessionStorage.setItem("data", data.userId);
+  
+    useEffect(() => {
+        console.log('gjgg');
         const stompClient = webstomp.over(SockJS(WsConnectUrl));
         stompClient.connect({}, () => {
 

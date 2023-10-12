@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import http from "../../http-common"
+import { LatestMessageContext } from "../../context/LatestMessage";
 
-export function Register() {
-    const [register,setRegister] = useState(false);
+export function Register({setLogin}) {
     const [name,setName] = useState("");
     const [password,setPassword] = useState("");
     const [image,setImage] = useState(null);
+    const {setData} = useContext(LatestMessageContext);
     let form = new FormData();
     const onRegister = (e)=>{
         e.preventDefault();
@@ -21,7 +22,15 @@ export function Register() {
         }).then(response => {
             return response.data;
         }).then(data => {
-            setRegister(data);
+            
+            setData((preData) => {
+                return {
+                    ...preData,
+                    userId: data.userId,
+                    currentFriend:  data
+                }
+            })
+            setLogin(true);
         })
     }
    
@@ -29,7 +38,6 @@ export function Register() {
         
         <div className="login-form">
             <h1>Đăng ký</h1>
-            {register && <p style={{color: "green"}}>Đăng ký thành công</p>}
             <div className="login-form__block">
                 <p>Name:</p>
                 <input placeholder="Tên" type="text" value={name} onChange={(e)=>setName(e.target.value)}/>
