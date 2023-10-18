@@ -26,30 +26,7 @@ export default function UserList() {
 
     const { data, setData } = useContext(LatestMessageContext)
     const { users } = data;
-    useEffect(() => {
-
-        http.get(`/messages/${data.userId}/${data.currentFriend.userId}`)
-            .then((response) => {
-
-                return response.data
-            }).then((messages) => {
-
-                console.log(messages)
-                setData(preData => {
-                    return {
-                        ...preData,
-                        messages: messages.map(
-                            message => {
-                                return {
-                                    text: message.text,
-                                    user: message.userSendId === preData.userId,
-                                    time: message.time
-                                }
-                            })
-                    }
-                })
-            })
-    }, [data.currentFriend])
+    
     const onClick = (userId) => {
         const newCurrentFriend = users.filter((user) => {
             return user.userId === userId;
@@ -61,7 +38,7 @@ export default function UserList() {
         })
 
     }
-    const goBackHomeEvent = ()=>{
+    const goBackHomeEvent = () => {
         setData({
             ...data,
             currentFriend: null
@@ -69,10 +46,10 @@ export default function UserList() {
         })
 
     }
-    const logoutEvent = ()=>{
-        sessionStorage.setItem("data",JSON.stringify(null));
-        sessionStorage.setItem("login",JSON.stringify(false));
-            
+    const logoutEvent = () => {
+        sessionStorage.setItem("data", JSON.stringify(null));
+        sessionStorage.setItem("login", JSON.stringify(false));
+
     }
     return (
         <div className="user-list">
@@ -83,8 +60,8 @@ export default function UserList() {
                         <i className="fas fa-chevron-down" />
                         <div className="user-list__header__dropdown__content">
                             <a href="/new-connect"><p>Thêm kết nối</p></a>
-                            <a href="/"><p  onClick={goBackHomeEvent}>Home</p></a>
-                            <a href="/"><p  onClick={logoutEvent}>Đăng xuât</p></a>
+                            <a href="/"><p onClick={goBackHomeEvent}>Home</p></a>
+                            <a href="/"><p onClick={logoutEvent}>Đăng xuât</p></a>
 
                         </div>
                     </div>
